@@ -9,7 +9,7 @@ export class AppComponent {
   // title = 'app works!';
   loadedFeature: String = 'recipe';
 
-  onNavigate(feature: string) {
-    this.loadedFeature = feature;
-  }
+  // onNavigate(feature: string) {
+  //   this.loadedFeature = feature;
+  // }
 }
