@@ -18,19 +18,24 @@ export class DataStorageService {
             });
     }
 
+    addRecipe(recipe) {
+        console.log(recipe);
+        return this.http.post('https://foodfluent-recipe-book.firebaseio.com/recipes.json', recipe);
+    }
+
     fetchRecipes() {
         return this.http
-            .get<Recipe[]>('https://foodfluent-recipe-book.firebaseio.com/recipes.json')
-            // .pipe(map(recipes => {
-            //     if (recipes) {
-            //         return recipes.map(recipe => {
-            //             return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] };
-            //         });
-            //     }
-            // }))
-            .subscribe(recipes => {
-                console.log(recipes);
-                this.recipeService.setRecipes(recipes);
-            })
+            .get<Recipe[]>('https://foodfluent-recipe-book.firebaseio.com/recipes.json');
+        // .pipe(map(recipes => {
+        //     if (recipes) {
+        //         return recipes.map(recipe => {
+        //             return { ...recipe, ingredients: recipe.ingredients ? recipe.ingredients : [] };
+        //         });
+        //     }
+        // }))
+        // .subscribe(recipes => {
+        //     console.log(recipes);
+        //     this.recipeService.setRecipes(recipes);
+        // })
     }
 }
