@@ -28,14 +28,28 @@ export class AuthComponent {
         this.isLoading = true;
 
         if (this.isLoginMode) {
-            //...
+            this.authService.login(email, password).subscribe(res => {
+                this.isLoading = false;
+            }, errorRes => {
+                console.log(errorRes);
+                if (errorRes && errorRes.error && errorRes.error.error) {
+                    this.error = errorRes.error.error.message;
+                }
+                this.isLoading = false;
+            })
         } else {
             this.authService.signup(email, password).subscribe(res => {
-                console.log(res);
                 this.isLoading = false;
-            }, error => {
-                console.log(error);
-                this.error = 'An error occured';
+            }, errorRes => {
+                // console.log(errorRes);
+                if (errorRes && errorRes.error && errorRes.error.error) {
+                    switch (errorRes.error.error.message) {
+                        case 'EMAIL_EXISTS':
+                            this.error = 'This eamil already exists.';
+                        default:
+                            this.error = "An unknow error occured!";
+                    }
+                }
                 this.isLoading = false;
             });
         }
