@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Subject } from "rxjs";
+import { Subject, BehaviorSubject } from "rxjs";
 import { User } from "./user.model";
 import { tap } from "rxjs/operators";
 
@@ -16,7 +16,8 @@ interface AuthResponseData {
 @Injectable()
 export class AuthService {
 
-    user = new Subject<User>();
+    // user = new Subject<User>();
+    user = new BehaviorSubject<User>(null);
 
     // FIREBASE_API_KEY = 'AIzaSyANHaVBWQBXzvOpPlm3SG6aPlFeWof6kvk';
 
