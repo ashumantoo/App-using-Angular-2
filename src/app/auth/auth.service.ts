@@ -17,6 +17,7 @@ interface AuthResponseData {
 export class AuthService {
 
     user = new Subject<User>();
+
     // FIREBASE_API_KEY = 'AIzaSyANHaVBWQBXzvOpPlm3SG6aPlFeWof6kvk';
 
     constructor(private http: HttpClient) { }
@@ -28,14 +29,10 @@ export class AuthService {
                 password: password,
                 returnSecureToken: true
             }
-        )
-        // .pipe(tap(resData => {
-        //     const expirationDate = new Date(
-        //         new Date().getTime() + +resData.expiresIn * 1000
-        //     );
-
-        // })
-        // );
+        ).pipe(tap(resData => {
+            this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
+        })
+        );
     }
 
     login(email: string, password: string) {
@@ -45,6 +42,17 @@ export class AuthService {
                 password: password,
                 returnSecureToken: true
             }
+        ).pipe(tap(resData => {
+            this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
+        })
         );
+    }
+
+    private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+        const expirationDate = new Date(
+            new Date().getTime() + expiresIn * 1000
+        );
+        const user = new User(email, userId, token, expirationDate);
+        this.user.next(user);
     }
 }
