@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Subject, BehaviorSubject } from "rxjs";
 import { User } from "./user.model";
 import { tap } from "rxjs/operators";
+import { Router } from "@angular/router";
 
 interface AuthResponseData {
     kind: string,
@@ -21,7 +22,7 @@ export class AuthService {
 
     // FIREBASE_API_KEY = 'AIzaSyANHaVBWQBXzvOpPlm3SG6aPlFeWof6kvk';
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private router: Router) { }
 
     signup(email: string, password: string) {
         return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.FIREBASE_API_KEY}`,
@@ -47,6 +48,11 @@ export class AuthService {
             this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
         })
         );
+    }
+
+    logout() {
+        this.user.next(null);
+        this.router.navigate(['auth']);
     }
 
     private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
