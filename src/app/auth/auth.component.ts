@@ -1,7 +1,11 @@
-import { Component } from "@angular/core";
+import { Component, ComponentFactoryResolver, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
-import { AuthService } from "./auth.service";
 import { Router } from "@angular/router";
+
+import { AuthService } from "./auth.service";
+import { AlertComponent } from "app/shared/alert/alert.component";
+import { PlaceholderDirective } from "app/shared/placeholder/placeholder.directive";
+import { l } from "@angular/core/src/render3";
 
 @Component({
     selector: 'app-auth',
@@ -12,8 +16,9 @@ export class AuthComponent {
     isLoginMode = true;
     isLoading = false;
     error: string = null;
+    @ViewChild(PlaceholderDirective) alertHost: PlaceholderDirective;
 
-    constructor(private authService: AuthService, private router: Router) { }
+    constructor(private authService: AuthService, private router: Router, private componentFactoryResolver: ComponentFactoryResolver) { }
 
     onSwitchMode() {
         this.isLoginMode = !this.isLoginMode;
@@ -34,6 +39,7 @@ export class AuthComponent {
                 this.router.navigate(['/recipes']);
             }, errorRes => {
                 console.log(errorRes);
+                this.showErrorAlert(errorRes);
                 if (errorRes && errorRes.error && errorRes.error.error) {
                     this.error = errorRes.error.error.message;
                 }
@@ -45,6 +51,7 @@ export class AuthComponent {
                 this.router.navigate(['/recipes']);
             }, errorRes => {
                 // console.log(errorRes);
+                this.showErrorAlert(errorRes);
                 if (errorRes && errorRes.error && errorRes.error.error) {
                     switch (errorRes.error.error.message) {
                         case 'EMAIL_EXISTS':
@@ -60,5 +67,13 @@ export class AuthComponent {
     }
     onHandleError() {
         this.error = null;
+    }
+
+    private showErrorAlert(message: string) {
+        // const alertComp = new AlertComponent();
+        const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+        const hostViewContainerRef = this.alertHost.viewContainerRef;
+        hostViewContainerRef.clear();
+        hostViewContainerRef.createComponent(alertComponentFactory);
     }
 }
