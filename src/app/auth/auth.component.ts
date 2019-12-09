@@ -1,22 +1,23 @@
-import { Component, ComponentFactoryResolver, ViewChild } from "@angular/core";
+import { Component, ComponentFactoryResolver, ViewChild, OnDestroy } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
 import { AuthService } from "./auth.service";
 import { AlertComponent } from "app/shared/alert/alert.component";
 import { PlaceholderDirective } from "app/shared/placeholder/placeholder.directive";
-import { l } from "@angular/core/src/render3";
 
 @Component({
     selector: 'app-auth',
     templateUrl: './auth.component.html'
 })
 
-export class AuthComponent {
+export class AuthComponent implements OnDestroy {
     isLoginMode = true;
     isLoading = false;
     error: string = null;
     @ViewChild(PlaceholderDirective) alertHost: PlaceholderDirective;
+    private closeSubscription: Subscription;
 
     constructor(private authService: AuthService, private router: Router, private componentFactoryResolver: ComponentFactoryResolver) { }
 
@@ -39,7 +40,7 @@ export class AuthComponent {
                 this.router.navigate(['/recipes']);
             }, errorRes => {
                 console.log(errorRes);
-                this.showErrorAlert(errorRes);
+                this.showErrorAlert(errorRes.error.error.message);
                 if (errorRes && errorRes.error && errorRes.error.error) {
                     this.error = errorRes.error.error.message;
                 }
@@ -51,7 +52,7 @@ export class AuthComponent {
                 this.router.navigate(['/recipes']);
             }, errorRes => {
                 // console.log(errorRes);
-                this.showErrorAlert(errorRes);
+                this.showErrorAlert(errorRes.error.error.message);
                 if (errorRes && errorRes.error && errorRes.error.error) {
                     switch (errorRes.error.error.message) {
                         case 'EMAIL_EXISTS':
@@ -69,11 +70,24 @@ export class AuthComponent {
         this.error = null;
     }
 
+    //Creating Dynamic alert Component By Programatically
     private showErrorAlert(message: string) {
+        console.log(message);
         // const alertComp = new AlertComponent();
         const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
         const hostViewContainerRef = this.alertHost.viewContainerRef;
         hostViewContainerRef.clear();
-        hostViewContainerRef.createComponent(alertComponentFactory);
+        const componentRef = hostViewContainerRef.createComponent(alertComponentFactory);
+        componentRef.instance.message = message;
+        this.closeSubscription = componentRef.instance.close.subscribe(() => {
+            this.closeSubscription.unsubscribe();
+            hostViewContainerRef.clear();
+        });
+    }
+
+    ngOnDestroy() {
+        if (this.closeSubscription) {
+            this.closeSubscription.unsubscribe();
+        }
     }
 }
