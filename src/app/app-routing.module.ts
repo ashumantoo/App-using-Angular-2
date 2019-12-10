@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
-import { ShoppingListComponent } from './shopping-list/shopping-list.component';
-import { AuthComponent } from './auth/auth.component';
+import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 
 const appRoutes: Routes = [
     { path: '', redirectTo: '/recipes', pathMatch: 'full' },
@@ -13,7 +10,8 @@ const appRoutes: Routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(appRoutes)
+        //This preloadingStrategy is used to pre load all the lazy loading so //that should load as soon as it called a certain routes
+        RouterModule.forRoot(appRoutes, { preloadingStrategy: PreloadAllModules })
     ],
     exports: [
         RouterModule
