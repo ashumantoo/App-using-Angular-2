@@ -14,8 +14,11 @@ import { SharedModule } from "app/shared/shared.module";
     ],
     imports: [
         FormsModule,
-        RouterModule,
-        SharedModule    
+        RouterModule.forChild([
+            // { path: 'shopping-list', component: ShoppingListComponent }
+            { path: '', component: ShoppingListComponent }   //for lazy loading
+        ]),
+        SharedModule
     ],
     exports: [
         ShoppingListComponent,

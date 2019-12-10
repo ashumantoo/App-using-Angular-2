@@ -6,8 +6,9 @@ import { AuthComponent } from './auth/auth.component';
 
 const appRoutes: Routes = [
     { path: '', redirectTo: '/recipes', pathMatch: 'full' },
-    { path: 'shopping-list', component: ShoppingListComponent },
-    { path: 'auth', component: AuthComponent },
+    { path: 'recipes', loadChildren: './recipes/recipes.module#RecipesModule' },
+    { path: 'shopping-list', loadChildren: './shopping-list/shoppingList.module#ShoppingListModule' },
+    { path: 'auth', loadChildren: './auth/auth.module#AuthModule' },
 ]
 
 @NgModule({

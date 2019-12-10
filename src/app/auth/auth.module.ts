@@ -13,7 +13,10 @@ import { SharedModule } from "app/shared/shared.module";
         FormsModule,
         ReactiveFormsModule,
         CommonModule,
-        RouterModule,
+        RouterModule.forChild([
+            // { path: 'auth', component: AuthComponent } //this route not using lazy loading
+            { path: '', component: AuthComponent },   //for lazy loading
+        ]),
         SharedModule
     ],
     exports: [
