@@ -4,6 +4,7 @@ import { Subject, BehaviorSubject } from "rxjs";
 import { User } from "./user.model";
 import { tap } from "rxjs/operators";
 import { Router } from "@angular/router";
+import { environment } from '../../environments/environment'
 
 interface AuthResponseData {
     kind: string,
@@ -21,12 +22,12 @@ export class AuthService {
     user = new BehaviorSubject<User>(null);
     private tokenExpirationTimer: any;
 
-    // FIREBASE_API_KEY = 'AIzaSyANHaVBWQBXzvOpPlm3SG6aPlFeWof6kvk';
+    FIREBASE_API_KEY = 'AIzaSyANHaVBWQBXzvOpPlm3SG6aPlFeWof6kvk';
 
     constructor(private http: HttpClient, private router: Router) { }
 
     signup(email: string, password: string) {
-        return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${this.FIREBASE_API_KEY}`,
+        return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${environment.firebaseAPIKey}`,
             {
                 email: email,
                 password: password,
@@ -63,7 +64,7 @@ export class AuthService {
     }
 
     login(email: string, password: string) {
-        return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${this.FIREBASE_API_KEY}`,
+        return this.http.post<AuthResponseData>(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${environment.f}`,
             {
                 email: email,
                 password: password,
