@@ -28,12 +28,13 @@ import { RecipeRoutingModule } from "./recipes-routing.mdoule";
         RecipeRoutingModule
     ],
     exports: [
-        RecipesComponent,
-        RecipeListComponent,
-        RecipeDetailComponent,
-        RecipeItemComponent,
-        RecipeStartComponent,
-        RecipeEditComponent
+        //We can remove theses export becasues these components are now will be loading using the recipes routing modules
+        // RecipesComponent,
+        // RecipeListComponent,
+        // RecipeDetailComponent,
+        // RecipeItemComponent,
+        // RecipeStartComponent,
+        // RecipeEditComponent
     ]
 })
 
